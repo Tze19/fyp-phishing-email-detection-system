@@ -34,6 +34,7 @@ docker compose ps
 
 ## Run the Application
 source venv/bin/activate
+
 python app.py
 
 ## Test Samples
