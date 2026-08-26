@@ -38,10 +38,10 @@ source venv/bin/activate
 python app.py
 
 ## Test Samples
-Synthetic .eml samples are provided under the samples directory for testing legitimate, phishing, URL and attachment-analysis scenarios.
+Test .eml samples are provided under the samples directory for testing legitimate, phishing, URL and attachment-analysis scenarios.
 
 ## Project Scope
 The sandbox-assisted dynamic analysis is applied to URLs. Attachments undergo controlled static inspection and are not executed.
 
 ## Disclaimer
-The provided samples are intended only for academic and controlled testing purposes.
+The provided samples only for controlled testing.
