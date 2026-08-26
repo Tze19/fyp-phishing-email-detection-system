@@ -1,0 +1,31 @@
+services:
+  selenium:
+    image: selenium/standalone-chromium:latest
+    container_name: fyp-selenium-sandbox
+
+    # Only the Ubuntu host can contact Selenium.
+    ports:
+      - "127.0.0.1:4444:4444"
+
+    shm_size: "2gb"
+
+    environment:
+      SE_NODE_MAX_SESSIONS: "1"
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+      SE_SESSION_REQUEST_TIMEOUT: "30"
+      SE_SESSION_RETRY_INTERVAL: "2"
+
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    networks:
+      - sandbox_network
+
+networks:
+  sandbox_network:
+    driver: bridge

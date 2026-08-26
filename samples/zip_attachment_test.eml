@@ -1,0 +1,25 @@
+From: Finance Team <finance@example.com>
+To: student@example.com
+Subject: Payment documents attached
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0136602501034694984=="
+
+--===============0136602501034694984==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+
+Please open the attached archive to review the payment documents.
+
+--===============0136602501034694984==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="suspicious_archive.zip"
+MIME-Version: 1.0
+
+UEsDBAoAAAAAAEIb8VwmJMAGFgAAABYAAAAUABwAemlwX3Rlc3QvcGF5bWVudC5leGVVVAkAA8ug
+WWrLoFlqdXgLAAEE6AMAAAToAwAASGFybWxlc3MgdGVzdCBjb250ZW50ClBLAQIeAwoAAAAAAEIb
+8VwmJMAGFgAAABYAAAAUABgAAAAAAAEAAAC0gQAAAAB6aXBfdGVzdC9wYXltZW50LmV4ZVVUBQAD
+y6BZanV4CwABBOgDAAAE6AMAAFBLBQYAAAAAAQABAFoAAABkAAAAAAA=
+
+--===============0136602501034694984==--

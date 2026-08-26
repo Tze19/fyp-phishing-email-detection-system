@@ -1,0 +1,45 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+
+# Runtime uploads
+uploads/*
+!uploads/.gitkeep
+
+# Test / cache output
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*.save
+*~
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Attachment inspection runtime files
+attachment_sandbox/work/*
+!attachment_sandbox/work/.gitkeep

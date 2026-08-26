@@ -1,0 +1,27 @@
+From: Billing Department <billing@example.com>
+To: student@example.com
+Subject: Urgent invoice payment required
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7082859318139272657=="
+
+--===============7082859318139272657==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+
+Dear customer,
+
+Please review the attached invoice and make payment immediately.
+
+Failure to respond may result in account suspension.
+
+--===============7082859318139272657==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice.pdf.exe"
+MIME-Version: 1.0
+
+VGhpcyBpcyBoYXJtbGVzcyB0ZXN0IGNvbnRlbnQgZm9yIEZZUCBhdHRhY2htZW50IGFuYWx5c2lz
+Lgo=
+
+--===============7082859318139272657==--

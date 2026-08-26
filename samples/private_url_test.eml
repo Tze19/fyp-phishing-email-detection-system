@@ -1,0 +1,9 @@
+From: Test Sender <sender@example.com>
+To: student@example.com
+Subject: Private Address Test
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+
+Please open:
+
+http://127.0.0.1:5000

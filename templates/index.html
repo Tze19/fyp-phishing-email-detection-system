@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Phishing Email Detection System</title>
+
+    <style>
+        :root {
+            --background: #eef2f6;
+            --surface: #ffffff;
+            --surface-secondary: #f8fafc;
+            --border: #d8dee8;
+            --text-primary: #172033;
+            --text-secondary: #5c677d;
+            --primary: #1f4f8f;
+            --primary-dark: #153b6c;
+            --success: #217a42;
+            --success-background: #e9f7ee;
+            --warning: #9a6400;
+            --warning-background: #fff5d8;
+            --danger: #a32929;
+            --danger-background: #fdecec;
+            --neutral-background: #edf1f5;
+            --shadow: 0 8px 24px rgba(25, 42, 70, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text-primary);
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+            line-height: 1.5;
+        }
+
+        .top-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #173d6f,
+                    #2867a8
+                );
+            color: white;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .top-header-content {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .top-header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .top-header p {
+            margin: 8px 0 0;
+            color: #dce9f7;
+            max-width: 850px;
+        }
+
+        .main-container {
+            max-width: 1180px;
+            margin: 30px auto;
+            padding: 0 20px 40px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .card-description {
+            margin-top: 0;
+            color: var(--text-secondary);
+        }
+
+        .upload-area {
+            border: 2px dashed #8ea3bd;
+            background: var(--surface-secondary);
+            border-radius: 10px;
+            padding: 38px 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .upload-area input[type="file"] {
+            display: block;
+            margin: 18px auto;
+            max-width: 100%;
+        }
+
+        .primary-button {
+            display: inline-block;
+            border: none;
+            border-radius: 7px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .error-box {
+            background: var(--danger-background);
+            border: 1px solid #dca4a4;
+            border-left: 6px solid var(--danger);
+            color: #6e1c1c;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 22px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 18px;
+        }
+
+        .summary-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .summary-value {
+            font-size: 22px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .classification-badge {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .badge-legitimate {
+            background: var(--success-background);
+            color: var(--success);
+            border: 1px solid #a9d5b8;
+        }
+
+        .badge-suspicious {
+            background: var(--warning-background);
+            color: var(--warning);
+            border: 1px solid #e4c875;
+        }
+
+        .badge-phishing {
+            background: var(--danger-background);
+            color: var(--danger);
+            border: 1px solid #e2aaaa;
+        }
+
+        .risk-low {
+            border-top: 6px solid var(--success);
+        }
+
+        .risk-medium {
+            border-top: 6px solid #d58a00;
+        }
+
+        .risk-high {
+            border-top: 6px solid var(--danger);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+        }
+
+        .section-tag {
+            background: var(--neutral-background);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text-secondary);
+            padding: 5px 11px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .information-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .information-table th,
+        .information-table td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+            overflow-wrap: anywhere;
+        }
+
+        .information-table th {
+            width: 245px;
+            background: var(--surface-secondary);
+            font-weight: bold;
+        }
+
+        .indicator-list {
+            margin: 14px 0 0;
+            padding-left: 22px;
+        }
+
+        .indicator-list li {
+            margin-bottom: 7px;
+        }
+
+        .status-pass {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .status-fail {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .status-warning {
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        .status-neutral {
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .body-preview {
+            max-height: 320px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background: #f9fbfd;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+
+        .subcard {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 18px;
+            margin-top: 16px;
+        }
+
+        .subcard:first-of-type {
+            margin-top: 0;
+        }
+
+        .subcard h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .hash-value {
+            font-family:
+                "Courier New",
+                monospace;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .small-note {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 14px;
+        }
+
+        .no-data {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            padding: 16px;
+        }
+
+        .footer {
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 13px;
+            padding: 10px 20px 30px;
+        }
+
+        @media (max-width: 700px) {
+            .top-header h1 {
+                font-size: 24px;
+            }
+
+            .main-container {
+                padding: 0 12px 30px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .information-table,
+            .information-table tbody,
+            .information-table tr,
+            .information-table th,
+            .information-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .information-table th {
+                border-bottom: none;
+            }
+
+            .section-title {
+                display: block;
+            }
+
+            .section-tag {
+                display: inline-block;
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="top-header">
+    <div class="top-header-content">
+        <h1>Phishing Email Detection System</h1>
+
+        <p>
+            Web-based analysis of suspicious emails using machine
+            learning, email-header inspection, URL analysis and
+            attachment inspection.
+        </p>
+    </div>
+</header>
+
+<main class="main-container">
+
+    <section class="card">
+        <h2>Upload Suspicious Email</h2>
+
+        <p class="card-description">
+            Select an email file in
+            <strong>.eml</strong> format. The uploaded file will be
+            parsed and analysed by the system.
+        </p>
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            <div class="upload-area">
+                <label for="email_file">
+                    <strong>Select an .eml file</strong>
+                </label>
+
+                <input
+                    type="file"
+                    id="email_file"
+                    name="email_file"
+                    accept=".eml,message/rfc822"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Upload and Analyse
+                </button>
+
+                <p class="small-note">
+                    Maximum upload size: 10 MB.
+                </p>
+            </div>
+        </form>
+    </section>
+
+    {% if error %}
+        <div class="error-box">
+            <strong>Analysis error:</strong>
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if result %}
+
+        <section
+            class="
+                card
+                {% if result.risk.risk_level == 'High' %}
+                    risk-high
+                {% elif result.risk.risk_level == 'Medium' %}
+                    risk-medium
+                {% else %}
+                    risk-low
+                {% endif %}
+            "
+        >
+            <div class="section-title">
+                <h2>Overall Security Assessment</h2>
+
+                <span class="section-tag">
+                    Hybrid analysis result
+                </span>
+            </div>
+
+            <div class="summary-grid">
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        Overall classification
+                    </div>
+
+                    <div class="summary-value">
+                        <span
+                            class="
+                                classification-badge
+                                {% if result.risk.overall_classification == 'Phishing' %}
+                                    badge-phishing
+                                {% elif result.risk.overall_classification == 'Suspicious' %}
+                                    badge-suspicious
+                                {% else %}
+                                    badge-legitimate
+                                {% endif %}
+                            "
+                        >
+                            {{ result.risk.overall_classification }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        Risk level
+                    </div>
+
+                    <div class="summary-value">
+                        {{ result.risk.risk_level }}
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        Risk score
+                    </div>
+
+                    <div class="summary-value">
+                        {{ result.risk.score }}/100
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        ML prediction
+                    </div>
+
+                    <div class="summary-value">
+                        {{ result.ml.classification }}
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        Suspicious URLs
+                    </div>
+
+                    <div class="summary-value">
+                        {{ result.risk.suspicious_url_count }}
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">
+                        Suspicious attachments
+                    </div>
+
+                    <div class="summary-value">
+                        {{ result.risk.suspicious_attachment_count }}
+                    </div>
+                </div>
+
+            </div>
+
+            <h3>Analysis Findings</h3>
+
+            {% if result.risk.indicators %}
+                <ul class="indicator-list">
+                    {% for indicator in result.risk.indicators %}
+                        <li>{{ indicator }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="no-data">
+                    No major security indicators were detected.
+                </div>
+            {% endif %}
+
+            <p class="small-note">
+                The final classification combines machine-learning,
+                email-header, URL and attachment findings. The risk
+                score is a prototype rule-based value and is not a
+                statistical probability.
+            </p>
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <h2>Email Information</h2>
+
+                <span class="section-tag">
+                    Parsed .eml metadata
+                </span>
+            </div>
+
+            <table class="information-table">
+                <tr>
+                    <th>Uploaded filename</th>
+                    <td>{{ result.filename }}</td>
+                </tr>
+
+                <tr>
+                    <th>Sender</th>
+                    <td>
+                        {{ result.email.sender or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Recipient</th>
+                    <td>
+                        {{ result.email.recipient or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Subject</th>
+                    <td>
+                        {{ result.email.subject or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Date</th>
+                    <td>
+                        {{ result.email.date or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Reply-To</th>
+                    <td>
+                        {{ result.email.reply_to or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Return-Path</th>
+                    <td>
+                        {{ result.email.return_path or "Unavailable" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Message-ID</th>
+                    <td>
+                        {{ result.email.message_id or "Unavailable" }}
+                    </td>
+                </tr>
+            </table>
+
+            <h3>Email Body Preview</h3>
+
+            <div class="body-preview">
+                {{ result.email.body_preview or "No readable body content." }}
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <h2>Machine-Learning Analysis</h2>
+
+                <span class="section-tag">
+                    TF-IDF and Linear SVM
+                </span>
+            </div>
+
+            <table class="information-table">
+                <tr>
+                    <th>Selected model</th>
+                    <td>{{ result.ml.model_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>ML prediction</th>
+                    <td>
+                        <span
+                            class="
+                                classification-badge
+                                {% if result.ml.classification == 'Phishing' %}
+                                    badge-phishing
+                                {% else %}
+                                    badge-legitimate
+                                {% endif %}
+                            "
+                        >
+                            {{ result.ml.classification }}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>SVM decision score</th>
+                    <td>
+                        {% if result.ml.decision_score is not none %}
+                            {{ "%.4f"|format(result.ml.decision_score) }}
+                        {% else %}
+                            Unavailable
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <p class="small-note">
+                A positive decision score generally supports the
+                phishing class, while a negative value generally
+                supports the legitimate class. It is not a probability.
+            </p>
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <h2>Email Authentication and Header Analysis</h2>
+
+                <span class="section-tag">
+                    SPF, DKIM, DMARC and sender alignment
+                </span>
+            </div>
+
+            <table class="information-table">
+                <tr>
+                    <th>SPF</th>
+                    <td>
+                        {% set spf = result.headers.authentication.spf %}
+
+                        <span
+                            class="
+                                {% if spf == 'pass' %}
+                                    status-pass
+                                {% elif spf in ['fail', 'softfail', 'permerror'] %}
+                                    status-fail
+                                {% elif spf in ['temperror', 'neutral'] %}
+                                    status-warning
+                                {% else %}
+                                    status-neutral
+                                {% endif %}
+                            "
+                        >
+                            {{ spf }}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>DKIM</th>
+                    <td>
+                        {% set dkim = result.headers.authentication.dkim %}
+
+                        <span
+                            class="
+                                {% if dkim == 'pass' %}
+                                    status-pass
+                                {% elif dkim in ['fail', 'permerror'] %}
+                                    status-fail
+                                {% elif dkim in ['temperror', 'neutral'] %}
+                                    status-warning
+                                {% else %}
+                                    status-neutral
+                                {% endif %}
+                            "
+                        >
+                            {{ dkim }}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>DMARC</th>
+                    <td>
+                        {% set dmarc = result.headers.authentication.dmarc %}
+
+                        <span
+                            class="
+                                {% if dmarc == 'pass' %}
+                                    status-pass
+                                {% elif dmarc in ['fail', 'permerror'] %}
+                                    status-fail
+                                {% elif dmarc in ['temperror', 'neutral'] %}
+                                    status-warning
+                                {% else %}
+                                    status-neutral
+                                {% endif %}
+                            "
+                        >
+                            {{ dmarc }}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Authentication headers found</th>
+                    <td>
+                        {{
+                            result.headers.authentication
+                            .authentication_headers_found
+                        }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>From domain</th>
+                    <td>
+                        {{
+                            result.headers.alignment.from_domain
+                            or "Unavailable"
+                        }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Reply-To domain</th>
+                    <td>
+                        {{
+                            result.headers.alignment.reply_to_domain
+                            or "Unavailable"
+                        }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Return-Path domain</th>
+                    <td>
+                        {{
+                            result.headers.alignment.return_path_domain
+                            or "Unavailable"
+                        }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Reply-To mismatch</th>
+                    <td>
+                        {% if result.headers.alignment.reply_to_mismatch %}
+                            <span class="status-fail">Yes</span>
+                        {% else %}
+                            <span class="status-pass">No</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Return-Path mismatch</th>
+                    <td>
+                        {% if result.headers.alignment.return_path_mismatch %}
+                            <span class="status-fail">Yes</span>
+                        {% else %}
+                            <span class="status-pass">No</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <p class="small-note">
+                SPF, DKIM and DMARC values are currently parsed from
+                the Authentication-Results header. They are not yet
+                independently verified by the application.
+            </p>
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <h2>URL Analysis</h2>
+
+                <span class="section-tag">
+                    Static URL indicators
+                </span>
+            </div>
+
+            {% if result.urls %}
+
+                {% for url in result.urls %}
+                    <div class="subcard">
+                        <h3>URL {{ loop.index }}</h3>
+
+                        <table class="information-table">
+                            <tr>
+                                <th>URL</th>
+                                <td>{{ url.url }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Hostname</th>
+                                <td>
+                                    {{ url.hostname or "Unavailable" }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Scheme</th>
+                                <td>
+                                    {{ url.scheme or "Unavailable" }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Suspicious</th>
+                                <td>
+                                    {% if url.suspicious %}
+                                        <span class="status-fail">
+                                            Yes
+                                        </span>
+                                    {% else %}
+                                        <span class="status-pass">
+                                            No
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        {% if url.indicators %}
+                            <h4>Indicators</h4>
+
+                            <ul class="indicator-list">
+                                {% for indicator in url.indicators %}
+                                    <li>{{ indicator }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="small-note">
+                                No static suspicious indicators detected.
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <div class="no-data">
+                    No URLs were detected in the email body.
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <div class="section-title">
+                <h2>Sandbox-Assisted URL Analysis</h2>
+
+                <span class="section-tag">
+                    Docker and Chromium Headless
+                </span>
+            </div>
+
+            {% if result.urls %}
+
+                {% for url in result.urls %}
+                    {% if url.sandbox is defined %}
+                        <div class="subcard">
+                            <h3>
+                                Sandbox Result {{ loop.index }}
+                            </h3>
+
+                            <table class="information-table">
+                                <tr>
+                                    <th>Original URL</th>
+                                    <td>
+                                        {{ url.sandbox.original_url }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Execution status</th>
+                                    <td>
+                                        {{ url.sandbox.status }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Validation</th>
+                                    <td>
+                                        {{
+                                            url.sandbox
+                                            .validation_reason
+                                            or "Unavailable"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Resolved IP addresses</th>
+                                    <td>
+                                        {% if url.sandbox.resolved_ips %}
+                                            {{
+                                                url.sandbox
+                                                .resolved_ips
+                                                | join(", ")
+                                            }}
+                                        {% else %}
+                                            Unavailable
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Final URL</th>
+                                    <td>
+                                        {{
+                                            url.sandbox.final_url
+                                            or "Unavailable"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Page title</th>
+                                    <td>
+                                        {{
+                                            url.sandbox.page_title
+                                            or "Unavailable"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Redirect detected</th>
+                                    <td>
+                                        {{
+                                            "Yes"
+                                            if url.sandbox
+                                                .redirect_detected
+                                            else "No"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Cross-domain redirect</th>
+                                    <td>
+                                        {{
+                                            "Yes"
+                                            if url.sandbox
+                                                .cross_domain_redirect
+                                            else "No"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>CAPTCHA detected</th>
+                                    <td>
+                                        {{
+                                            "Yes"
+                                            if url.sandbox
+                                                .captcha_detected
+                                            else "No"
+                                        }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Elapsed time</th>
+                                    <td>
+                                        {{
+                                            url.sandbox
+                                            .elapsed_seconds
+                                        }} seconds
+                                    </td>
+                                </tr>
+
+                                {% if url.sandbox.error %}
+                                    <tr>
+                                        <th>Error</th>
+                                        <td>
+                                            {{ url.sandbox.error }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+
+                            {% if url.sandbox.indicators %}
+                                <h4>
+                                    Dynamic Indicators
+                                </h4>
+
+                                <ul class="indicator-list">
+                                    {% for indicator in url.sandbox.indicators %}
+                                        <li>
+                                            {{ indicator }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                            {% if url.sandbox.screenshot_url %}
+                                <h4>Sandbox Screenshot</h4>
+
+                                <img
+                                    src="{{
+                                        url.sandbox
+                                        .screenshot_url
+                                    }}"
+                                    alt="Sandbox screenshot"
+                                    style="
+                                        max-width: 100%;
+                                        border: 1px solid #d8dee8;
+                                        border-radius: 8px;
+                                    "
+                                >
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+                <div class="no-data">
+                    No URLs were available for sandbox analysis.
+                </div>
+            {% endif %}
+        </section>
+
+
+        <section class="card">
+            <div class="section-title">
+                <h2>Attachment Analysis</h2>
+
+                <span class="section-tag">
+                    File type, hash and PDF inspection
+                </span>
+            </div>
+
+            {% if result.attachments %}
+
+                {% for attachment in result.attachments %}
+                    <div class="subcard">
+                        <h3>
+                            Attachment {{ loop.index }}:
+                            {{ attachment.filename }}
+                        </h3>
+
+                        <table class="information-table">
+                            <tr>
+                                <th>Filename</th>
+                                <td>{{ attachment.filename }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Reported MIME type</th>
+                                <td>
+                                    {{
+                                        attachment.reported_content_type
+                                        or "Unavailable"
+                                    }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Detected MIME type</th>
+                                <td>
+                                    {{
+                                        attachment.detected_content_type
+                                        or "Unavailable"
+                                    }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>File size</th>
+                                <td>
+                                    {{ attachment.size_bytes }} bytes
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>SHA-256</th>
+                                <td class="hash-value">
+                                    {{ attachment.sha256 }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Suspicious</th>
+                                <td>
+                                    {% if attachment.suspicious %}
+                                        <span class="status-fail">
+                                            Yes
+                                        </span>
+                                    {% else %}
+                                        <span class="status-pass">
+                                            No
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        {% if attachment.indicators %}
+                            <h4>Indicators</h4>
+
+                            <ul class="indicator-list">
+                                {% for indicator in attachment.indicators %}
+                                    <li>{{ indicator }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {% if attachment.pdf_text_preview %}
+                            <h4>Extracted PDF Text Preview</h4>
+
+                            <div class="body-preview">
+                                {{ attachment.pdf_text_preview }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <div class="no-data">
+                    No attachments were detected in the email.
+                </div>
+            {% endif %}
+        </section>
+
+    {% endif %}
+
+</main>
+
+<footer class="footer">
+    Web-Based Phishing Email Detection System using Machine Learning
+    and Sandbox-Assisted Analysis
+</footer>
+
+</body>
+</html>
